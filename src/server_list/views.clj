@@ -42,8 +42,8 @@
   [server]
   (html
    (link-to (:cn server) (:cn server))
-   (when (= (:isActive server) "TRUE") (success-label "Online"))
-   (when (= (:userAccessible server) "TRUE") (info-label "Public"))))
+   (when (:isActive server) (success-label "Online"))
+   (when (:userAccessible server)(info-label "Public"))))
 
 (defn servers-index
   [servers]
