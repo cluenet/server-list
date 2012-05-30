@@ -11,7 +11,7 @@
 (defroutes app*
   (GET "/" request
        (views/servers-index
-        (sort-by #(vec (map % [:isActive :userAccessible])) #(compare %2 %1) (ldap/get-servers))))
+        (sort-by #(vec (map % [:is-active :user-accessible])) #(compare %2 %1) (ldap/get-servers))))
   (GET "/:cn" [cn] (views/servers-show (ldap/get-server cn))))
 
 (def app (->

@@ -1,11 +1,12 @@
 (ns server-list.views
   (:use hiccup.core
         hiccup.page
-        hiccup.element))
+        hiccup.element)
+  (:require [clojure.string :as str]))
 
-(defn- lbool->str
-  [lbool]
-  (if (= lbool "TRUE") "Yes" "No"))
+(defn- bool->str
+  [bool]
+  (if bool "Yes" "No"))
 
 (defn- header
   [title]
@@ -42,8 +43,8 @@
   [server]
   (html
    (link-to (:cn server) (:cn server))
-   (when (:isActive server) (success-label "Online"))
-   (when (:userAccessible server)(info-label "Public"))))
+   (when (:is-active server) (success-label "Online"))
+   (when (:user-accessible server)(info-label "Public"))))
 
 (defn servers-index
   [servers]
@@ -53,6 +54,19 @@
     [:li.active "Server List"]]
    (unordered-list
     (for [server servers] (servers-index-list-item server)))))
+
+(defn- extract-uid
+  [dn]
+  (re-find #"(?<=uid=)[^,]+" dn))
+
+(defn- field
+  ([name value]
+     (field value name value))
+  ([test name value]
+     (when test
+       (html
+        [:dt name]
+        [:dd value]))))
 
 (defn servers-show
   [server]
@@ -65,8 +79,15 @@
     [:li.active (:cn server)]]
    [:p#description (:description server)]
    [:dl.dl-horizontal
-    [:dt "Is official"]
-    [:dd (lbool->str (:isOfficial server))]
-
-    [:dt "User accessible"]
-    [:dd (lbool->str (:uerAccessible server))]]))
+    (field "Owner" (extract-uid (:owner server)))
+    (field (:authorized-administrator server)
+           "Admins"
+           (str/join ", " (map extract-uid (:authorized-administrator server))))
+    (field "Official" (bool->str (:is-official server)))
+    (field "User accessible" (bool->str (:user-accessible server)))
+    (field "Purpose" (:purpose server))
+    (field "RAM" (str (:ram-size server) " MB"))
+    (field "HDD" (str (:hdd-size server) " GB"))
+    (field "OS" (:operating-system server))
+    (field "Network" (:network-lan server))
+    (field "SSH port" (:ssh-port server))]))
