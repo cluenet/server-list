@@ -32,12 +32,18 @@
    "&nbsp;"
    [:span.label.label-important content]))
 
+(defn- yellow-label
+  [content]
+  (html
+   "&nbsp;"
+   [:span.label.label-warning content]))
+
 (defn- servers-index-list-item
   [server]
   (html
    (link-to (:cn server) (:cn server))
    (when (not= (:isActive server) "TRUE") (red-label "Offline"))
-   (when (not= (:userAccessible server) "TRUE") (red-label "Private"))))
+   (when (not= (:userAccessible server) "TRUE") (yellow-label "Private"))))
 
 (defn servers-index
   [servers]
