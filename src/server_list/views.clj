@@ -26,24 +26,24 @@
     [:div.container
      content]]))
 
-(defn- red-label
+(defn- info-label
   [content]
   (html
    "&nbsp;"
-   [:span.label.label-important content]))
+   [:span.label.label-info content]))
 
-(defn- yellow-label
+(defn- success-label
   [content]
   (html
    "&nbsp;"
-   [:span.label.label-warning content]))
+   [:span.label.label-success content]))
 
 (defn- servers-index-list-item
   [server]
   (html
    (link-to (:cn server) (:cn server))
-   (when (not= (:isActive server) "TRUE") (red-label "Offline"))
-   (when (not= (:userAccessible server) "TRUE") (yellow-label "Private"))))
+   (when (= (:isActive server) "TRUE") (success-label "Online"))
+   (when (= (:userAccessible server) "TRUE") (info-label "Public"))))
 
 (defn servers-index
   [servers]
