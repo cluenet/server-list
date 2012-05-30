@@ -28,7 +28,7 @@
    [:ul.breadcrumb
     [:li.active "Server List"]]
    (unordered-list
-    (map :cn servers))))
+    (for [server servers] (link-to (:cn server) (:cn server))))))
 
 (defn servers-show
   [server]
